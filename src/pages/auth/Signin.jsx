@@ -55,6 +55,7 @@ const Login = () => {
                   <label htmlFor="Email" className="block text-sm font-medium text-gray-700"> Email </label>
 
                   <input
+                  required
                     type="email"
                     id="Email"
                     name="email"
@@ -71,6 +72,7 @@ const Login = () => {
                   <label htmlFor="Password" className="block text-sm font-medium text-gray-700"> Password </label>
 
                   <input
+                  required
                     type="password"
                     id="Password"
                     name="password"

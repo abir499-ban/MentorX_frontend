@@ -1,13 +1,13 @@
 import { createContext, useState} from 'react'
+import { checkInvalidResponse } from '../../common/InvalidResponseChecker'
+import { successfull_Response } from '../../common/SuccessResponse'
 
 const AuthContext = createContext()
 
 const AuthContextProvider = ({ children }) => {
-    const [token, settoken] = useState("")
     const [user, setuser] = useState("")
 
     const logIn = async (userLoginData) => {
-        console.log("inside Auth Context")
         try {
             const result = await fetch('http://localhost:3000/auth', {
                 method: 'POST',
@@ -17,13 +17,23 @@ const AuthContextProvider = ({ children }) => {
                 body: JSON.stringify(userLoginData)
             })
             const res = await result.json();
-            console.log(res);
-            return res;
+            if(checkInvalidResponse(res)){
+                return {
+                    message : res.message,
+                    success : false
+                }
+            }
+
+            localStorage.setItem('token', res.access_token)
+            return successfull_Response('Successfull Login')
         } catch (error) {
-            throw new Error(error)
+            return {
+                message : error.message,
+                success : false
+            }
         }
     }
-    return <AuthContext.Provider value={{ token, user, logIn }}>
+    return <AuthContext.Provider value={{user, logIn }}>
         {children}
     </AuthContext.Provider>
 }
