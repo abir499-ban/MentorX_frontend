@@ -1,6 +1,8 @@
 import { createContext, useState} from 'react'
 import { checkInvalidResponse } from '../../common/InvalidResponseChecker'
 import { successfull_Response } from '../../common/SuccessResponse'
+import { BadResponse } from '../../common/BadResponse'
+import { base_url } from '../../constants/domain_credentials'
 
 const AuthContext = createContext()
 
@@ -33,7 +35,30 @@ const AuthContextProvider = ({ children }) => {
             }
         }
     }
-    return <AuthContext.Provider value={{user, logIn }}>
+
+    const createAccount = async(userPayload) =>{
+        try {
+            const result = await fetch(`${base_url}/users`, {
+                method : 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userPayload)
+            })
+            const res = await result.json()
+            if(checkInvalidResponse(res)){
+                return {
+                    message : res.message,
+                    success : false
+                }
+            }
+            localStorage.setItem('email', userPayload.email)
+            return successfull_Response('Account created Successfully');
+        } catch (error) {
+            return BadResponse(error.message)
+        }
+    }
+    return <AuthContext.Provider value={{user, logIn, createAccount }}>
         {children}
     </AuthContext.Provider>
 }

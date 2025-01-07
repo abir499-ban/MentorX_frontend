@@ -18,7 +18,6 @@ const Login = () => {
     e.preventDefault();
     setloading(true);
     try {
-      console.log("Hello")
       const result = await logIn(userLoginPayload)
       console.log(result)
     } catch (error) {
