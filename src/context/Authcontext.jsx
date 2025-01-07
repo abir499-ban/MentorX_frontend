@@ -46,6 +46,7 @@ const AuthContextProvider = ({ children }) => {
                 body: JSON.stringify(userPayload)
             })
             const res = await result.json()
+            console.log(res)
             if(checkInvalidResponse(res)){
                 return {
                     message : res.message,
@@ -53,7 +54,7 @@ const AuthContextProvider = ({ children }) => {
                 }
             }
             localStorage.setItem('email', userPayload.email)
-            return successfull_Response('Account created Successfully');
+            return successfull_Response('Account created Successfully and OTP sent via email');
         } catch (error) {
             return BadResponse(error.message)
         }

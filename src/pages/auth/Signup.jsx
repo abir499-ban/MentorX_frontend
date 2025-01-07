@@ -1,33 +1,39 @@
-import {useEffect, useState } from "react"
-
+import { useEffect, useState } from "react"
+import { Button } from '@material-tailwind/react'
 import { Loader } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import AuthContext from "../../context/Authcontext";
+import OTPDialog from "../../components/OTPDialog";
 
 
 const SignUp = () => {
   const [loading, setloading] = useState(false)
+  const [otpSent, setotpSent] = useState(false)
   const [userSignUpPayload, setuserSignUpPayload] = useState({
-    firstName : '',
-    lastName : '',
-    email : '',
-    password : '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
   })
-  const {createAccount} = useContext(AuthContext)
+  const { createAccount } = useContext(AuthContext)
 
-  const HandleSubmit  = async(e)=>{
+  const HandleSubmit = async (e) => {
     e.preventDefault()
     setloading(true)
     try {
       const res = await createAccount(userSignUpPayload)
       console.log(res)
+      if (res.success)
+        setotpSent(true)
+      else
+        console.log(res.message)
     } catch (error) {
       console.log(error)
-    }finally{
+    } finally {
       setloading(false)
     }
-  }  
+  }
   return (
     <>
       {/*
@@ -36,6 +42,9 @@ const SignUp = () => {
   Plugins:
     - @tailwindcss/forms
 */}
+      {otpSent && (
+        <OTPDialog />
+      )}
 
       <section className="bg-white">
         <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
@@ -54,11 +63,11 @@ const SignUp = () => {
 
 
               <h1 className="mt-6 text-2xl font-poppins font-bold text-gray-900 sm:text-3xl md:text-4xl">
-               Welcome to MentorX 
+                Welcome to MentorX
               </h1>
 
               <p className="mt-4 leading-relaxed text-gray-500">
-                Easily sign up by providing your email, creating a password, and filling out your profile to start tracking your job applications effortlessly.
+                Instant access to pros from top companies & domains
               </p>
 
               <form className="mt-8 grid grid-cols-6 gap-6">
@@ -145,7 +154,7 @@ const SignUp = () => {
                 />
               </div> */}
 
-                
+
 
 
 
