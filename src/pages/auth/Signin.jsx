@@ -1,8 +1,10 @@
 import { useContext, useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { Loader } from "lucide-react"
+import AuthContext from "../../context/Authcontext"
 
 const Login = () => {
+  const {logIn} = useContext(AuthContext)
   const [userLoginPayload, setuserLoginPayload] = useState ({
     email: "",
     password: ""
@@ -17,15 +19,8 @@ const Login = () => {
     setloading(true);
     try {
       console.log("Hello")
-      const result = await fetch('http://localhost:3000/auth',{
-        method:'POST',
-        headers:{
-          'Content-Type' : 'application/json'
-        },
-        body: JSON.stringify(userLoginPayload)
-      })
-      const res = await result.json();
-      console.log(res);
+      const result = await logIn(userLoginPayload)
+      console.log(result)
     } catch (error) {
       console.log(error);
     } finally {
