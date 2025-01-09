@@ -1,22 +1,52 @@
 import React, { useContext, useState } from 'react'
 import AuthContext from '../../context/Authcontext'
 import { domain_options } from '../../../constants/mentor_list'
+import { base_url } from '../../../constants/domain_credentials'
+import { checkInvalidResponse } from '../../../common/InvalidResponseChecker'
+import { successfull_Response } from '../../../common/SuccessResponse'
+import { Loader } from 'lucide-react'
+import { BadResponse } from '../../../common/BadResponse'
 
 const CreateProfile = () => {
+  const token = localStorage.getItem('token')
   const { user } = useContext(AuthContext)
   const [loading, setloading] = useState(false)
   const [createMentorPayload, setcreateMentorPayload] = useState({
-    id : user.id,
+    userID : user.id,
     domain : '',
     company : '',
     position : '',
     about : ''
   })
+
   const HandleSubmit = async(e) =>{
     e.preventDefault()
     setloading(true)
-    console.table(createMentorPayload)
+    try{
+      const res = await fetch(`${base_url}/mentor`,{
+        method: 'POST',
+        headers:{
+          'Content-Type' : 'application/json',
+          'Authorization' : `Bearer ${token}`
+        },
+        body : JSON.stringify(createMentorPayload)
+      })
+      const response = await res.json();
+     
+      // if(checkInvalidResponse(response)){
+      //   console.log(BadResponse('Unauthorized'));
+      //   return;
+      // }
+      // console.log(successfull_Response('mentor registration successfull'))
+      console.log(response)
+    }
+    catch(err){
+      console.log(err);
+    }finally{
+      setloading(false)
+    }
   }
+
   return (
     <>
       <section className="bg-gray-100">
@@ -121,7 +151,11 @@ const CreateProfile = () => {
                     className="inline-block shrink-0 rounded-md border border-pink-600 bg-pink-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-pink-600 focus:outline-none focus:ring active:text-pink-500"
 
                   >
-                    Resgister as a Mentor
+                    {!loading ? (
+                      <p>Register as a Mentor</p>
+                    ) : (
+                      <Loader/>
+                    )}
                   </button>
                 </div>
               </form>

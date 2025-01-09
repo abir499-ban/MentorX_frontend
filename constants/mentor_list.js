@@ -1,5 +1,5 @@
 export const domain_options = [
-    "Career Development",
+    "Software Development",
     "Personal Growth",
     "Technology and Programming",
     "Business and Entrepreneurship",
