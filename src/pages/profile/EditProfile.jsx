@@ -1,9 +1,46 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Input, Typography, Button } from '@material-tailwind/react'
 import { Facebook, FolderKanban, Github, Instagram, Linkedin } from 'lucide-react'
+import { useState } from 'react'
+import AuthContext from '../../context/Authcontext'
 
 const EditProfile = () => {
-    const interest = [1, 2, 3]
+    const {user}  =  useContext(AuthContext)
+    const interestCount = [1, 2, 3]
+    const[updateMentorPayload, setupdateMentorPayload]  = useState({
+        id : user.id,
+        metaData :{
+            linkedIn : '',
+            github: '',
+            socials : ['',''],
+            bio : '',
+            interests : ['','',''],
+            work : ['', '', '']
+        }
+    })
+
+    const handleSocialChange = (index, value) => {
+        setupdateMentorPayload((prev)=>{
+            const arr = [...prev.metaData.socials]
+            arr[index] = value;
+            return{
+                ...prev,
+                metaData : {...prev.metaData, socials : arr}
+            }
+        })
+    }
+
+    
+
+    const handleSubmit = async(e) =>{
+        e.preventDefault()
+        try{
+            console.table(updateMentorPayload)
+        }
+        catch(error){
+            console.log(error)
+        }
+    }
     return (
         <>
             {/*
@@ -26,7 +63,17 @@ const EditProfile = () => {
                     <div className='flex flex-wrap flex-col gap-3'>
 
                         <div >
-                            <Input label="Add your LinkedIn URL" icon={<Linkedin />} />
+                            <Input label="Add your LinkedIn URL" icon={<Linkedin />} 
+                            name='linkedIn'
+                            value={updateMentorPayload.metaData.linkedIn}
+                            onChange={(e)=>setupdateMentorPayload((prev)=>({
+                                ...prev,
+                                metaData:{
+                                    ...prev.metaData,
+                                    linkedIn : e.target.value
+                                }
+                            }))}
+                            />
                             <Typography
                                 variant="small"
                                 color="gray"
@@ -40,35 +87,66 @@ const EditProfile = () => {
                         <div>
 
                             <div>
-                                <Input label="Add your Github URL" icon={<Github />} />
+                                <Input label="Add your Github URL" icon={<Github />} 
+                                name='github'
+                                value={updateMentorPayload.metaData.github}
+                                onChange={(e)=>setupdateMentorPayload((prev) => ({
+                                    ...prev,
+                                    metaData:{
+                                        ...prev.metaData,
+                                        github : e.target.value
+                                    }
+                                }))}/>
                             </div>
                         </div>
 
-                        <div>
+                       
 
-                            <div>
-                                <Input label="Add a social media url" />
+                            {updateMentorPayload.metaData.socials.map((option, idx)=>(
+                                <div key={idx}>
+                                <Input label={`${idx}.  Add a social media URL`}
+                                name={`social${idx}`}
+                                value={option}
+                                onChange={(e)=>handleSocialChange(idx, e.target.value)}
+                                />
                             </div>
-                        </div>
-
-                        <div>
-
-                            <div>
-                                <Input label="Add a social media URL" />
-                            </div>
-                        </div>
+                            ))}
+                    
+                        
 
                         <div className='mt-10'>
                             <div>
-                                <Input variant='static' label="Add a bio" placeholder='Enter a short bio about yourself' />
+                                <Input variant='static' label="Add a bio" placeholder='Enter a short bio about yourself' 
+                                name='bio'
+                                value={updateMentorPayload.metaData.bio}
+                                onChange={(e)=>setupdateMentorPayload((prev)=>({
+                                    ...prev,
+                                    metaData:{
+                                        ...prev.metaData,
+                                        bio : e.target.value
+                                    }
+                                }))}/>
                             </div>
                         </div>
 
                         <div className='mt-3'>
                             <label className='text-sm text-gray-600 mb-2' >Add your Interests</label>
                             <div className='flex  flex-row gap-3 w-1/2'>
-                                {interest.map((option, inx) => (
-                                    <Input key={inx} color="pink" />
+                                {updateMentorPayload.metaData.interests.map((option, idx) => (
+                                    <Input key={idx} color="pink" 
+                                    value={option}
+                                    onChange={(e)=>setupdateMentorPayload((prev)=>{
+                                        const arr = [...prev.metaData.interests]
+                                        arr[idx] = e.target.value
+                                        return{
+                                            ...prev,
+                                            metaData:{
+                                                ...prev.metaData,
+                                                interests : arr
+                                            }
+                                        }
+                                    })}
+                                    />
                                 ))}
 
                             </div>
@@ -77,8 +155,18 @@ const EditProfile = () => {
                         <div className='mt-3'>
                             <label className='text-sm text-gray-600 mb-2' >Add links, resources, blogs or anything related to your work or project</label>
                             <div className='flex  flex-col gap-3'>
-                                {interest.map((option, inx) => (
-                                    <Input key={inx} color="blue" icon={<FolderKanban/>} />
+                                {updateMentorPayload.metaData.work.map((option, idx) => (
+                                    <Input key={idx} color="blue" icon={<FolderKanban/>} 
+                                    value={option}
+                                    onChange={(e)=>setupdateMentorPayload((prev)=>{
+                                        const arr = [...prev.metaData.work]
+                                        arr[idx]  = e.target.value;
+                                        return{
+                                            ...prev,
+                                            metaData : {...prev.metaData, work : arr}
+                                        }
+                                    })}
+                                    />
                                 ))}
 
                             </div>
@@ -95,6 +183,7 @@ const EditProfile = () => {
                     <Button variant="outlined">Skip</Button>
 
                         <button
+                        onClick={handleSubmit}
                             type="submit"
                             className="inline-block shrink-0 rounded-md border border-pink-600 bg-pink-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-pink-600 focus:outline-none focus:ring active:text-pink-500"
                         >
