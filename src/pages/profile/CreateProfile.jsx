@@ -1,9 +1,22 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import AuthContext from '../../context/Authcontext'
 import { domain_options } from '../../../constants/mentor_list'
 
 const CreateProfile = () => {
   const { user } = useContext(AuthContext)
+  const [loading, setloading] = useState(false)
+  const [createMentorPayload, setcreateMentorPayload] = useState({
+    id : user.id,
+    domain : '',
+    company : '',
+    position : '',
+    about : ''
+  })
+  const HandleSubmit = async(e) =>{
+    e.preventDefault()
+    setloading(true)
+    console.table(createMentorPayload)
+  }
   return (
     <>
       <section className="bg-gray-100">
@@ -35,7 +48,11 @@ const CreateProfile = () => {
                           className="block w-full cursor-pointer rounded-lg border border-gray-200 p-3 text-gray-600 hover:border-black has-[:checked]:border-black has-[:checked]:bg-black has-[:checked]:text-white"
                           tabIndex="0"
                         >
-                          <input className="sr-only" id={option} type="radio" tabIndex="-1" name="Domain" />
+                          <input className="sr-only" id={option} type="radio" tabIndex="-1" name="domain" value={option}
+                          onChange={(e) => setcreateMentorPayload((prev) => ({
+                            ...prev,
+                            domain : e.target.value
+                          }))}/>
 
                           <span className="text-sm"> {option}</span>
                         </label>
@@ -54,6 +71,12 @@ const CreateProfile = () => {
                     placeholder="Enter company/organization name"
                     type="text"
                     id="company"
+                    name="company"
+                    value={createMentorPayload.company}
+                    onChange={(e)=> setcreateMentorPayload((prev) =>({
+                      ...prev,
+                      company : e.target.value
+                    }))}
                   />
                 </div>
 
@@ -65,6 +88,12 @@ const CreateProfile = () => {
                     placeholder="Enter your position in the company /organization<"
                     type="text"
                     id="position"
+                    name='position'
+                    value={createMentorPayload.position}
+                    onChange={(e)=> setcreateMentorPayload((prev) =>({
+                      ...prev,
+                      position : e.target.value
+                    }))}
                   />
                 </div>
 
@@ -76,12 +105,19 @@ const CreateProfile = () => {
                     placeholder="Description"
                     rows="8"
                     id="message"
+                    name='about'
+                    value={createMentorPayload.about}
+                    onChange={(e)=>setcreateMentorPayload((prev) => ({
+                      ...prev,
+                      about : e.target.value
+                    }))}
                   ></textarea>
                 </div>
 
                 <div className="mt-4">
                   <button
                     type="submit"
+                    onClick={HandleSubmit}
                     className="inline-block shrink-0 rounded-md border border-pink-600 bg-pink-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-pink-600 focus:outline-none focus:ring active:text-pink-500"
 
                   >
