@@ -1,8 +1,18 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import AuthContext from '../context/Authcontext'
 
 const Dashboard = () => {
+  const {user}  = useContext(AuthContext)
+  useEffect(()=>{
+    console.table(user)
+  }, [])
   return (
-    <div>Hello</div>
+    <>
+    <div>
+      <h1>Hello</h1>
+      <p>Name : {user.email}</p>
+    </div>
+    </>
   )
 }
 

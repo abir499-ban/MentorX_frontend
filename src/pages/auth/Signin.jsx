@@ -4,14 +4,14 @@ import { Loader } from "lucide-react"
 import AuthContext from "../../context/Authcontext"
 
 const Login = () => {
-  const {logIn} = useContext(AuthContext)
-  const [userLoginPayload, setuserLoginPayload] = useState ({
+  const { logIn } = useContext(AuthContext)
+  const [userLoginPayload, setuserLoginPayload] = useState({
     email: "",
     password: ""
   })
 
   const [loading, setloading] = useState(false)
-
+  const navigate = useNavigate();
 
 
   const HandleLogin = async (e) => {
@@ -20,6 +20,8 @@ const Login = () => {
     try {
       const result = await logIn(userLoginPayload)
       console.log(result)
+      if (result.success)
+        navigate('/')
     } catch (error) {
       console.log(error);
     } finally {
@@ -54,7 +56,7 @@ const Login = () => {
                   <label htmlFor="Email" className="block text-sm font-medium text-gray-700"> Email </label>
 
                   <input
-                  required
+                    required
                     type="email"
                     id="Email"
                     name="email"
@@ -71,7 +73,7 @@ const Login = () => {
                   <label htmlFor="Password" className="block text-sm font-medium text-gray-700"> Password </label>
 
                   <input
-                  required
+                    required
                     type="password"
                     id="Password"
                     name="password"

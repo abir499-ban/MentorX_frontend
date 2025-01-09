@@ -3,6 +3,7 @@ import { checkInvalidResponse } from '../../common/InvalidResponseChecker'
 import { successfull_Response } from '../../common/SuccessResponse'
 import { BadResponse } from '../../common/BadResponse'
 import { base_url } from '../../constants/domain_credentials'
+import getUser from '../../common/getUser'
 
 const AuthContext = createContext()
 
@@ -27,6 +28,9 @@ const AuthContextProvider = ({ children }) => {
             }
 
             localStorage.setItem('token', res.access_token)
+            const user = await getUser(res.access_token)
+            console.table(user)
+            setuser(user)
             return successfull_Response('Successfull Login')
         } catch (error) {
             return {
@@ -38,7 +42,7 @@ const AuthContextProvider = ({ children }) => {
 
     const createAccount = async(userPayload) =>{
         try {
-            const result = await fetch(`${base_url}/users`, {
+            const result = await fetch(`${base_url}/users/token`, {
                 method : 'POST',
                 headers: {
                     'Content-Type': 'application/json'
