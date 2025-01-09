@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard'
 import Signup from './pages/auth/Signup'
 import CreateProfile from './pages/profile/CreateProfile'
 import Protectedroute from './components/Protectedroute'
+import EditProfile from './pages/profile/EditProfile'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route index element={<Dashboard />} />
         <Route element={<Protectedroute />}>
           <Route path='/createProfile' element={<CreateProfile />} />
+          <Route path='/editProfile' element={<EditProfile/>} />
         </Route>
 
       </Route>

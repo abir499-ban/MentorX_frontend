@@ -6,8 +6,10 @@ import { checkInvalidResponse } from '../../../common/InvalidResponseChecker'
 import { successfull_Response } from '../../../common/SuccessResponse'
 import { Loader } from 'lucide-react'
 import { BadResponse } from '../../../common/BadResponse'
+import { useNavigate } from 'react-router-dom'
 
 const CreateProfile = () => {
+  const Navigate = useNavigate()
   const token = localStorage.getItem('token')
   const { user } = useContext(AuthContext)
   const [loading, setloading] = useState(false)
@@ -33,12 +35,12 @@ const CreateProfile = () => {
       })
       const response = await res.json();
      
-      // if(checkInvalidResponse(response)){
-      //   console.log(BadResponse('Unauthorized'));
-      //   return;
-      // }
-      // console.log(successfull_Response('mentor registration successfull'))
-      console.log(response)
+      if(checkInvalidResponse(response)){
+        console.log(BadResponse('Unauthorized'));
+        return;
+      }
+      console.log(successfull_Response('mentor registration successfull'))
+      Navigate('/editProfile')
     }
     catch(err){
       console.log(err);
