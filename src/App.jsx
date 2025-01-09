@@ -5,6 +5,8 @@ import Signin from './pages/auth/Signin'
 import { Routes, Route, BrowserRouter } from 'react-router-dom'
 import Dashboard from './pages/Dashboard'
 import Signup from './pages/auth/Signup'
+import CreateProfile from './pages/profile/CreateProfile'
+import Protectedroute from './components/Protectedroute'
 
 function App() {
   return (
@@ -15,6 +17,9 @@ function App() {
       <Route path='/' element={<Layout />}>
 
         <Route index element={<Dashboard />} />
+        <Route element={<Protectedroute />}>
+          <Route path='/createProfile' element={<CreateProfile />} />
+        </Route>
 
       </Route>
       <Route path='/login' element={<Signin />} />

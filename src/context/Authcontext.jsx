@@ -1,4 +1,4 @@
-import { createContext, useState} from 'react'
+import { createContext, useState, useEffect} from 'react'
 import { checkInvalidResponse } from '../../common/InvalidResponseChecker'
 import { successfull_Response } from '../../common/SuccessResponse'
 import { BadResponse } from '../../common/BadResponse'
@@ -8,7 +8,22 @@ import getUser from '../../common/getUser'
 const AuthContext = createContext()
 
 const AuthContextProvider = ({ children }) => {
-    const [user, setuser] = useState("")
+
+    const [loading, setloading] = useState(true)
+    const [user, setuser] = useState(undefined)
+
+    useEffect(()=>{
+        setloading(true)
+        const getUserfromAuthContext = async()=>{
+            const token = localStorage.getItem('token');
+            const user = await getUser(token);
+            if(user){
+                setuser(user)
+            }
+            setloading(false)
+        }
+        getUserfromAuthContext()
+    }, [])
 
     const logIn = async (userLoginData) => {
         try {
@@ -28,9 +43,6 @@ const AuthContextProvider = ({ children }) => {
             }
 
             localStorage.setItem('token', res.access_token)
-            const user = await getUser(res.access_token)
-            console.table(user)
-            setuser(user)
             return successfull_Response('Successfull Login')
         } catch (error) {
             return {
@@ -63,7 +75,7 @@ const AuthContextProvider = ({ children }) => {
             return BadResponse(error.message)
         }
     }
-    return <AuthContext.Provider value={{user, logIn, createAccount }}>
+    return <AuthContext.Provider value={{user, logIn, createAccount, loading }}>
         {children}
     </AuthContext.Provider>
 }
