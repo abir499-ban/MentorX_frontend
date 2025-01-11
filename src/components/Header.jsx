@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
+import AuthContext from '../context/Authcontext'
+import { Button } from '@material-tailwind/react'
 
 const Header = () => {
+    const {user} = useContext(AuthContext)
     return (
         <>
             <header className="bg-white pt-0 mt-0 top-0 relative w-full">
@@ -16,21 +19,24 @@ const Header = () => {
                         </div>
 
                         <div className="flex items-center gap-4">
-                            <button
-                                className="inline-flex items-center justify-center gap-1.5 rounded border border-gray-200 bg-white px-5 py-3 text-gray-900 transition hover:text-gray-700 focus:outline-none focus:ring"
-                                type="button"
+                            {user != undefined ? (
+                                <Button
+                                variant='outline'
+                                color='pink'
                             >
-                                <span className="text-sm font-medium"> View Website </span>
+                                <Link className="text-sm font-medium" to='/createProfile'> Register as mentor </Link>
 
                                
-                            </button>
-
-                            <Link
+                            </Button>
+                            ) : (
+                                <Link
                                 className="inline-block rounded bg-indigo-600 px-5 py-3 text-sm font-medium text-white transition hover:bg-indigo-700 focus:outline-none focus:ring"
                                 to='/login'
                             >
                                 Log In
                             </Link>
+                            )}
+                            
                         </div>
                     </div>
                 </div>

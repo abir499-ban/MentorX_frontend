@@ -204,7 +204,7 @@ const EditProfile = () => {
 
 
                     <div className="flex items-center justify-between">
-                        <Button variant="outlined"><a href='/'>Skip</a></Button>
+                        <Button variant="outlined"><a href='/createService'>Skip</a></Button>
 
                         <button
                             onClick={handleSubmit}

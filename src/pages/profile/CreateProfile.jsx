@@ -34,9 +34,10 @@ const CreateProfile = () => {
         body : JSON.stringify(createMentorPayload)
       })
       const response = await res.json();
+      
      
       if(checkInvalidResponse(response)){
-        console.log(BadResponse('Unauthorized'));
+        console.log(BadResponse(response.message));
         return;
       }
       console.log(successfull_Response('mentor registration successfull'))
