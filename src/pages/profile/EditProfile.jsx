@@ -7,7 +7,7 @@ import { base_url } from '../../../constants/domain_credentials'
 import { checkInvalidResponse } from '../../../common/InvalidResponseChecker'
 import { BadResponse } from '../../../common/BadResponse'
 import { successfull_Response } from '../../../common/SuccessResponse'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate,Link } from 'react-router-dom'
 
 const EditProfile = () => {
     const navigate = useNavigate();
@@ -204,7 +204,7 @@ const EditProfile = () => {
 
 
                     <div className="flex items-center justify-between">
-                        <Button variant="outlined">Skip</Button>
+                        <Button variant="outlined"><a href='/'>Skip</a></Button>
 
                         <button
                             onClick={handleSubmit}
