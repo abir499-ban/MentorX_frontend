@@ -1,12 +1,52 @@
 import { Button, Input, Textarea, IconButton, Typography } from '@material-tailwind/react'
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { serviceTypes } from '../../../constants/service_types.'
-import { IndianRupee } from 'lucide-react'
+import { IndianRupee, Loader } from 'lucide-react'
+import AuthContext from '../../context/Authcontext'
+import { base_url } from '../../../constants/domain_credentials'
+import { BadResponse } from '../../../common/BadResponse'
+import { checkInvalidResponse } from '../../../common/InvalidResponseChecker'
+import { successfull_Response } from '../../../common/SuccessResponse'
 
 const CreateService = () => {
-  const [value, setValue] = React.useState(0)
+  const navigate = useNavigate();
+  const token = localStorage.getItem('token')
+  const { user } = useContext(AuthContext)
+  const [loading, setloading] = useState(false)
+  const [servicePayload, setservicePayload] = React.useState({
+    userID: user.id,
+    type: '',
+    headline: '',
+    about: '',
+    cost: 0
+  })
 
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setloading(true)
+    try {
+      const res = await fetch(`${base_url}/mentor_Service`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(servicePayload)
+      })
+      const response = await res.json();
+      if (checkInvalidResponse(response)) {
+        console.log(BadResponse('Error occurred'))
+        return;
+      }
+      console.log(successfull_Response('Service Created'))
+      navigate('/')
+    } catch (error) {
+      console.log(error.message)
+    } finally {
+      setloading(false)
+    }
+  }
   return (
     <>
 
@@ -15,7 +55,7 @@ const CreateService = () => {
           <h1 className="text-2xl font-bold sm:text-3xl">Add a Service Today</h1>
         </div>
 
-        <form action="#" className="mx-auto mb-0 mt-8 max-w-md space-y-4">
+        <form className="mx-auto mb-0 mt-8 max-w-md space-y-4">
           <div className="grid grid-cols-1 gap-4 text-center sm:grid-cols-3">
             {serviceTypes.map((option, index) => (
               <div key={index}>
@@ -25,6 +65,10 @@ const CreateService = () => {
                   tabIndex="0"
                 >
                   <input className="sr-only" id={option} type="radio" tabIndex="-1" name="domain" value={option}
+                    onChange={(e) => setservicePayload((prev) => ({
+                      ...prev,
+                      type: e.target.value
+                    }))}
                   />
 
                   <span className="text-sm"> {option}</span>
@@ -36,11 +80,21 @@ const CreateService = () => {
           </div>
 
           <div className='mx-auto max-w-screen-xl px-3 py-7 '>
-            <Input variant="static" label="Enter headline " placeholder="Add a headline to you service" />
+            <Input variant="static" label="Enter headline " placeholder="Add a headline to you service" required value={servicePayload.headline}
+              onChange={(e) => setservicePayload((prev) => ({
+                ...prev,
+                headline: e.target.value
+              }))}
+            />
           </div>
 
           <div className='mx-auto max-w-screen-xl px-3 py-2 '>
-            <Textarea size="md" placeholder="Adding a description to your service often enagages more career seekers" />
+            <Textarea size="md" placeholder="Adding a description to your service often enagages more career seekers"
+              value={servicePayload.about}
+              onChange={(e) => setservicePayload((prev) => ({
+                ...prev,
+                about: e.target.value
+              }))} />
           </div>
 
           <div className="w-80">
@@ -55,13 +109,14 @@ const CreateService = () => {
               <Input
                 icon={<IndianRupee />}
                 type="number"
-                value={value}
-                onChange={(e) => setValue(Number(e.target.value))}
+                value={servicePayload.cost}
+                onChange={(e) => setservicePayload((prev) => ({
+                  ...prev,
+                  cost: e.target.value
+                }))}
               />
             </div>
-            <Typography variant="small" color="gray" className="mt-2 font-normal">
-              Adjust the number using the + and - controls.
-            </Typography>
+
           </div>
 
 
@@ -69,12 +124,21 @@ const CreateService = () => {
           <div className="flex items-center justify-between">
 
 
-            <button
+            {!loading ? (
+              <button
+              onClick={handleSubmit}
               type="submit"
               className="inline-block shrink-0 rounded-md border border-pink-600 bg-pink-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-pink-600 focus:outline-none focus:ring active:text-pink-500"
             >
               Create Service
             </button>
+            ) : (
+              <button
+              className="inline-block shrink-0 rounded-md border border-pink-600 bg-pink-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-pink-600 focus:outline-none focus:ring active:text-pink-500"
+            >
+              <Loader/>
+            </button>
+            )}
           </div>
         </form>
       </div>
