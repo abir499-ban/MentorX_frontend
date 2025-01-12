@@ -7,7 +7,12 @@ export default withMIT({
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily : {
+        gilroy: ['Gilroy', '-apple-system', 'BlinkMacSystemFont', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        poppins : ['Poppins', 'sans-serif']
+      }
+    },
   },
   plugins: [],
 })

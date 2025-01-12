@@ -34,7 +34,7 @@ function MentorProfileCard() {
                 <Typography
                     variant="small"
                     color="black"
-                    className="font-normal  opacity-75 mt-7">
+                    className="font-normal  opacity-75 mt-7 line-clamp-6">
                     {Mentor.bio}
                 </Typography>
             </CardBody>
