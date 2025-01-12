@@ -9,6 +9,9 @@ import CreateProfile from './pages/profile/CreateProfile'
 import Protectedroute from './components/Protectedroute'
 import EditProfile from './pages/profile/EditProfile'
 import CreateService from './pages/profile/CreateService'
+import UserProfile from './pages/profile/UserProfile'
+import UserProfileSidebar from './components/UserProfileSidebar'
+import Bookings from './pages/profile/Bookings'
 
 function App() {
   return (
@@ -20,9 +23,15 @@ function App() {
 
         <Route index element={<Dashboard />} />
         <Route element={<Protectedroute />}>
+
+          <Route path='/userProfile' element={<UserProfileSidebar />}>
+            <Route index element={<UserProfile />} />
+            <Route path='bookings' element={<Bookings/>} />
+          </Route>
+          
           <Route path='/createProfile' element={<CreateProfile />} />
-          <Route path='/editProfile' element={<EditProfile/>} />
-          <Route path='/createService' element={<CreateService/>} />
+          <Route path='/editProfile' element={<EditProfile />} />
+          <Route path='/createService' element={<CreateService />} />
         </Route>
 
       </Route>

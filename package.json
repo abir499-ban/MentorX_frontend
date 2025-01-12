@@ -11,6 +11,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@material-tailwind/react": "^2.1.10",
     "jest-environment-jsdom": "^29.7.0",
     "lucide-react": "^0.469.0",
